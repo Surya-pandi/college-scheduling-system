@@ -1,0 +1,185 @@
+College Management System - Folder Structure
+=============================================
+
+college-management-system/
+│
+├── app.py                          ← Main Flask backend application
+├── config.py                       ← Configuration settings
+├── requirements.txt                ← Python dependencies
+├── setup_admin.py                  ← Initialize admin account
+├── .env                           ← Environment variables (local only)
+├── .gitignore                     ← Git ignore patterns
+├── Procfile                       ← Render deployment configuration
+│
+├── public/                        ← Frontend HTML files
+│   ├── index.html                ← Home/landing page
+│   ├── admin-login.html          ← Admin login portal
+│   ├── staff-login.html          ← Staff login portal
+│   ├── admin-dashboard.html      ← Admin control panel
+│   ├── staff-dashboard.html      ← Staff interface
+│   └── college_management.db     ← SQLite database (auto-created)
+│
+├── Documentation Files:
+│   ├── README.md                 ← Full documentation
+│   ├── SETUP.md                  ← Detailed setup instructions
+│   ├── DEPLOYMENT.md             ← Render deployment guide
+│   ├── QUICKSTART.md             ← 5-minute quick start
+│   └── FOLDER-STRUCTURE.txt      ← This file
+│
+└── Setup Scripts:
+    ├── run-windows.bat           ← One-click start (Windows)
+    ├── run-linux.sh              ← One-click start (Linux/macOS)
+    └── setup_admin.py            ← Database & admin initialization
+
+
+Database Schema
+===============
+
+college_management.db (SQLite)
+│
+├── admin                         ← Admin user accounts
+├── staff                         ← Staff/faculty accounts
+├── timetable                     ← Class schedules
+├── leave                         ← Leave applications & approvals
+├── class_rescheduling           ← Auto-rescheduling records
+├── attendance                    ← Attendance & presence tracking
+└── login_log                     ← Login/logout audit trail
+
+
+API Endpoints
+=============
+
+Authentication:
+  POST   /api/admin/register           → Register admin
+  POST   /api/admin/login              → Admin login
+  POST   /api/staff/login              → Staff login
+  POST   /api/admin/logout             → Admin logout
+  POST   /api/staff/logout             → Staff logout
+  GET    /api/session                  → Check current session
+
+Admin Operations:
+  GET    /api/admin/staff              → List all staff
+  POST   /api/admin/staff              → Add staff member
+  PUT    /api/admin/staff/<id>         → Update staff
+  DELETE /api/admin/staff/<id>         → Deactivate staff
+
+Timetable:
+  GET    /api/admin/timetable          → View all schedules
+  POST   /api/admin/timetable          → Add schedule
+  PUT    /api/admin/timetable/<id>     → Update schedule
+  DELETE /api/admin/timetable/<id>     → Delete schedule
+  GET    /api/staff/timetable          → View personal schedule
+
+Leave Management:
+  POST   /api/staff/leave/apply        → Apply for leave
+  GET    /api/admin/leave/pending      → View pending requests
+  POST   /api/admin/leave/<id>/approve → Approve leave
+  POST   /api/admin/leave/<id>/reject  → Reject leave
+
+Rescheduling:
+  GET    /api/admin/rescheduling       → View all rescheduling
+  POST   /api/admin/rescheduling/<id>/override → Override assignment
+
+Reports:
+  GET    /api/admin/stats/staff-count     → Staff statistics
+  GET    /api/admin/stats/login-activity → Login logs
+  GET    /api/admin/leave-presence       → Attendance report
+
+
+Key Features
+============
+
+✓ Secure Role-Based Authentication
+  - Separate admin and staff login portals
+  - Password hashing with bcrypt
+  - Session management with HTTP-only cookies
+
+✓ Staff Management
+  - Add, edit, view, deactivate staff
+  - Department and position tracking
+  - Active/inactive status management
+
+✓ Timetable Management
+  - Create class schedules with staff assignment
+  - Organize by day, time, room, batch
+  - Quick view all assignments
+  - Easy editing and deletion
+
+✓ Automatic Leave & Rescheduling
+  - Staff apply for leave with reason
+  - System automatically finds replacement
+  - Avoids timetable conflicts
+  - Admin can override assignments
+  - Leave approval/rejection workflow
+
+✓ Attendance Tracking
+  - Monitor staff presence
+  - Leave history with approval status
+  - Quick statistics dashboard
+
+✓ Login Activity Monitoring
+  - Track all logins/logouts
+  - Timestamp and IP address logging
+  - Audit trail for security
+
+✓ Responsive Design
+  - Works on desktop, tablet, mobile
+  - Professional UI with smooth interactions
+  - Real-time data updates
+
+
+Setup & Running
+===============
+
+Quick Start (Windows):
+  1. Double-click run-windows.bat
+  2. Opens http://localhost:5000
+
+Quick Start (Linux/macOS):
+  1. chmod +x run-linux.sh
+  2. ./run-linux.sh
+  3. Opens http://localhost:5000
+
+Manual Start:
+  1. python -m venv venv
+  2. source venv/bin/activate  (or venv\Scripts\activate on Windows)
+  3. pip install -r requirements.txt
+  4. python setup_admin.py
+  5. python app.py
+  6. Open http://localhost:5000
+
+
+Deployment
+==========
+
+Local: Run python app.py (development)
+Render: Follow DEPLOYMENT.md for free hosting
+
+
+Security Credentials
+====================
+
+Default Admin Account:
+  Email: admin@college.edu
+  Password: admin123
+  ACTION: Change immediately after first login!
+
+Staff Default Password:
+  "default123"
+  ACTION: Require staff to change on first login!
+
+Environment Variables (.env):
+  FLASK_ENV=development
+  SECRET_KEY=<generate-random-string>
+  DATABASE_URL=sqlite:///college_management.db
+
+
+Support & Documentation
+=======================
+
+Full Setup Guide: See SETUP.md
+Deployment Guide: See DEPLOYMENT.md
+Quick Start: See QUICKSTART.md
+Full Documentation: See README.md
+
+Troubleshooting: Check SETUP.md "Common Issues & Solutions"

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .portal-options {
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+        }
+
+        .portal-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .admin-portal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .admin-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .staff-portal {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .staff-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+
+            .portal-button {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>College Management System</h1>
+        <p>A comprehensive platform for managing staff scheduling, leave applications, and attendance tracking</p>
+
+        <div class="portal-options">
+            <a href="admin-login.html" class="portal-button admin-portal">Admin Login</a>
+            <a href="staff-login.html" class="portal-button staff-portal">Staff Login</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .top-bar h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .logout-btn {
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table thead {
+            background: #f8f9fa;
+        }
+
+        table th,
+        table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        table th {
+            font-weight: 600;
+            color: #333;
+        }
+
+        table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .success-message,
+        .error-message {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .error-message {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .class-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .class-card h4 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .class-card p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-approved {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status-rejected {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 15px 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Staff Portal</h2>
+                <p id="staffName">Staff Member</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a class="menu-item active" data-section="dashboard">Dashboard</a></li>
+                <li><a class="menu-item" data-section="timetable">My Timetable</a></li>
+                <li><a class="menu-item" data-section="leave">Apply for Leave</a></li>
+                <li><a class="menu-item" data-section="leave-history">Leave History</a></li>
+                <li><a onclick="logout()" style="cursor: pointer;">Logout</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="top-bar">
+                <h1 id="pageTitle">Dashboard</h1>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <h2>Welcome to Staff Portal</h2>
+                <p style="margin-top: 15px; margin-bottom: 20px; color: #666;">Manage your timetable, apply for leave, and track your attendance.</p>
+
+                <div style="background: #f0f4ff; padding: 20px; border-radius: 10px; margin-bottom: 30px;">
+                    <h3>Quick Statistics</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+                        <div>
+                            <p style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Classes This Week</p>
+                            <p style="font-size: 24px; font-weight: bold; color: #667eea;" id="classCount">0</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Pending Leave Requests</p>
+                            <p style="font-size: 24px; font-weight: bold; color: #f39c12;" id="pendingLeaveCount">0</p>
+                        </div>
+                        <div>
+                            <p style="font-size: 12px; color: #666; text-transform: uppercase; margin-bottom: 5px;">Approved Leaves</p>
+                            <p style="font-size: 24px; font-weight: bold; color: #27ae60;" id="approvedLeaveCount">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>Today's Classes</h3>
+                <div id="todayClasses"></div>
+            </div>
+
+            <!-- Timetable Section -->
+            <div id="timetable" class="content-section">
+                <div class="section-header">
+                    <h2>My Timetable</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Time Slot</th>
+                            <th>Room</th>
+                            <th>Batch</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Apply Leave Section -->
+            <div id="leave" class="content-section">
+                <div class="section-header">
+                    <h2>Apply for Leave</h2>
+                </div>
+                <div id="leaveMessage"></div>
+                <form id="leaveForm" onsubmit="submitLeaveForm(event)">
+                    <div class="form-group">
+                        <label>Leave Date</label>
+                        <input type="date" id="leaveDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Leave Type</label>
+                        <select id="leaveType" required>
+                            <option>Sick Leave</option>
+                            <option>Casual Leave</option>
+                            <option>Emergency Leave</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Reason</label>
+                        <textarea id="reason" rows="4" placeholder="Please provide a reason for your leave request..."></textarea>
+                    </div>
+                    <button type="submit" class="btn">Submit Leave Request</button>
+                </form>
+            </div>
+
+            <!-- Leave History Section -->
+            <div id="leave-history" class="content-section">
+                <div class="section-header">
+                    <h2>Leave History</h2>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Leave Date</th>
+                            <th>Type</th>
+                            <th>Reason</th>
+                            <th>Status</th>
+                            <th>Applied On</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaveHistoryBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            loadDashboardData();
+            loadTimetable();
+            loadLeaveHistory();
+            setupMenuListeners();
+            setMinDate();
+        });
+
+        async function checkAuth() {
+            const response = await fetch('/api/session', { credentials: 'include' });
+            const data = await response.json();
+            if (!data.user || data.user.type !== 'staff') {
+                window.location.href = 'staff-login.html';
+            } else {
+                document.getElementById('staffName').textContent = data.user.name;
+            }
+        }
+
+        function setupMenuListeners() {
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    const section = e.target.dataset.section;
+                    switchSection(section);
+                });
+            });
+        }
+
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from menu
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+            
+            // Update title
+            const titles = {
+                dashboard: 'Dashboard',
+                timetable: 'My Timetable',
+                leave: 'Apply for Leave',
+                'leave-history': 'Leave History'
+            };
+            document.getElementById('pageTitle').textContent = titles[sectionId];
+        }
+
+        function setMinDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const date = String(today.getDate()).padStart(2, '0');
+            document.getElementById('leaveDate').min = `${year}-${month}-${date}`;
+        }
+
+        async function loadDashboardData() {
+            try {
+                const timetableResponse = await fetch('/api/staff/timetable', { credentials: 'include' });
+                const timetableData = await timetableResponse.json();
+                
+                document.getElementById('classCount').textContent = timetableData.timetable.length;
+                
+                // Load today's classes
+                const today = new Date().toLocaleString('en-US', { weekday: 'long' });
+                const todayClasses = timetableData.timetable.filter(t => t.day === today);
+                
+                const todayClassesDiv = document.getElementById('todayClasses');
+                if (todayClasses.length === 0) {
+                    todayClassesDiv.innerHTML = '<p style="color: #666; font-size: 14px;">No classes scheduled for today.</p>';
+                } else {
+                    todayClassesDiv.innerHTML = todayClasses.map(t => `
+                        <div class="class-card">
+                            <h4>${t.course_code} - ${t.course_name}</h4>
+                            <p><strong>Time:</strong> ${t.time_slot}</p>
+                            <p><strong>Room:</strong> ${t.room}</p>
+                            ${t.batch ? `<p><strong>Batch:</strong> ${t.batch}</p>` : ''}
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        async function loadTimetable() {
+            try {
+                const response = await fetch('/api/staff/timetable', { credentials: 'include' });
+                const data = await response.json();
+
+                const tbody = document.getElementById('timetableBody');
+                tbody.innerHTML = '';
+                
+                if (data.timetable.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #999;">No timetable assigned yet.</td></tr>';
+                } else {
+                    data.timetable.forEach(entry => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${entry.day}</td>
+                            <td>${entry.course_code}</td>
+                            <td>${entry.course_name}</td>
+                            <td>${entry.time_slot}</td>
+                            <td>${entry.room}</td>
+                            <td>${entry.batch}</td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading timetable:', error);
+            }
+        }
+
+        async function loadLeaveHistory() {
+            try {
+                const response = await fetch('/api/staff/leave-history', { credentials: 'include' });
+                const data = await response.json();
+
+                const tbody = document.getElementById('leaveHistoryBody');
+                tbody.innerHTML = '';
+                
+                if (!data.leaves || data.leaves.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #999;">No leave applications yet.</td></tr>';
+                } else {
+                    let pendingCount = 0;
+                    let approvedCount = 0;
+                    let rejectedCount = 0;
+
+                    data.leaves.forEach(leave => {
+                        // Count statuses
+                        if (leave.status === 'pending') pendingCount++;
+                        if (leave.status === 'approved') approvedCount++;
+                        if (leave.status === 'rejected') rejectedCount++;
+
+                        // Only show pending and approved leaves (not rejected)
+                        if (leave.status !== 'rejected') {
+                            const row = tbody.insertRow();
+                            const statusClass = `status-${leave.status}`;
+                            const statusColor = leave.status === 'approved' ? '#27ae60' : leave.status === 'pending' ? '#f39c12' : '#e74c3c';
+                            
+                            row.innerHTML = `
+                                <td>${leave.leave_date}</td>
+                                <td>${leave.leave_type}</td>
+                                <td>${leave.reason || '-'}</td>
+                                <td><span class="status-badge ${statusClass}" style="color: ${statusColor};">${leave.status.toUpperCase()}</span></td>
+                                <td>${leave.applied_at || '-'}</td>
+                            `;
+                        }
+                    });
+
+                    // Update dashboard counters
+                    document.getElementById('pendingLeaveCount').textContent = pendingCount;
+                    document.getElementById('approvedLeaveCount').textContent = approvedCount;
+                }
+            } catch (error) {
+                console.error('[v0] Error loading leave history:', error);
+            }
+        }
+
+        async function submitLeaveForm(event) {
+            event.preventDefault();
+            const leaveDate = document.getElementById('leaveDate').value.trim();
+            const leaveType = document.getElementById('leaveType').value.trim();
+            const reason = document.getElementById('reason').value.trim();
+
+            // Validation
+            if (!leaveDate || !leaveType) {
+                showMessage('leaveMessage', 'Please select leave date and type', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/staff/leave', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        leave_date: leaveDate,
+                        leave_type: leaveType,
+                        reason: reason
+                    })
+                });
+
+                if (response.ok) {
+                    document.getElementById('leaveForm').reset();
+                    await loadLeaveHistory();
+                    await loadDashboardData();
+                    showMessage('leaveMessage', 'Leave application submitted successfully!', 'success');
+                } else {
+                    const error = await response.json();
+                    showMessage('leaveMessage', error.error || 'Failed to apply for leave', 'error');
+                }
+            } catch (error) {
+                console.error('[v0] Error submitting leave:', error);
+                showMessage('leaveMessage', 'Error submitting leave application', 'error');
+            }
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="${type}-message">${message}</div>`;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 5000);
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/staff/logout', { 
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = 'staff-login.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = 'staff-login.html';
+            }
+        }
+
+        setInterval(function() {
+            loadLeaveHistory();
+        }, 10000);
+
+        window.addEventListener('load', function() {
+            loadDashboardData();
+            loadTimetable();
+            loadLeaveHistory();
+            setInterval(loadDashboardData, 30000);
+        });
+    </script>
+</body>
+</html>

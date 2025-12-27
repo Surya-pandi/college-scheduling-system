@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - College Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fadbd8;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #d5f4e6;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .portal-links {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .portal-links a {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .portal-links a:hover {
+            color: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Admin Portal</h1>
+            <p>College Management System</p>
+        </div>
+
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="admin@college.edu">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="login-button" id="loginButton">Login</button>
+        </form>
+
+        <div class="portal-links">
+            <p>Not an admin? <a href="staff-login.html">Staff Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loginButton = document.getElementById('loginButton');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            loginButton.disabled = true;
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    successMessage.textContent = 'Login successful! Redirecting...';
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1500);
+                } else {
+                    errorMessage.textContent = data.error || 'Login failed. Please try again.';
+                    errorMessage.style.display = 'block';
+                    loginButton.disabled = false;
+                }
+            } catch (error) {
+                errorMessage.textContent = 'Connection error. Please try again.';
+                errorMessage.style.display = 'block';
+                loginButton.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
